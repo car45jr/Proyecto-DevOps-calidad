@@ -1,0 +1,35 @@
+# Pipeline de CI para CircleCI
+# Ejemplo académico para demostrar portabilidad de pipelines en CI/CD
+
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+            - v1-dependencies-
+      - run:
+          name: Instalar dependencias
+          command: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+      - save_cache:
+          paths:
+            - ~/.cache/pip
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+      - run:
+          name: Ejecutar pruebas y cobertura
+          command: |
+            pytest -v
+            pytest --cov=app --cov-report=term-missing --cov-report=xml
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test

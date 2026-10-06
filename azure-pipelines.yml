@@ -1,0 +1,28 @@
+# Pipeline de CI para Azure DevOps Pipelines
+# Ejemplo académico para demostración de interoperabilidad DevOps
+
+trigger:
+  - main
+  - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.11'
+  displayName: 'Configurar Python 3.11'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Instalar dependencias'
+
+- script: |
+    pytest -v
+  displayName: 'Ejecutar pruebas automatizadas con pytest'
+
+- script: |
+    pytest --cov=app --cov-report=term-missing --cov-report=xml
+  displayName: 'Medir cobertura de código con pytest-cov'
