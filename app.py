@@ -7,7 +7,7 @@ Descripción: Calculadora básica para demostración de Integración Continua (C
 
 def sumar(a: float | int, b: float | int) -> float | int:
     """Retorna la suma de dos números."""
-    return a - b
+    return a + b
 
 
 def restar(a: float | int, b: float | int) -> float | int:
