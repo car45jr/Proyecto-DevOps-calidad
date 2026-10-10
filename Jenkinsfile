@@ -4,45 +4,35 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Obteniendo el código fuente del repositorio...'
                 checkout scm
             }
         }
 
-        stage('Instalar Dependencias') {
+        stage('Instalar dependencias') {
             steps {
-                echo 'Instalando dependencias desde requirements.txt...'
-                sh '''
-                    python3 -m pip install --upgrade pip
-                    pip install -r requirements.txt
-                '''
+                bat 'python -m pip install -r requirements.txt'
             }
         }
 
-        stage('Ejecutar Pruebas Automatizadas') {
+        stage('Ejecutar pruebas') {
             steps {
-                echo 'Ejecutando pruebas unitarias con pytest...'
-                sh 'pytest -v'
+                bat 'python -m pytest -v'
             }
         }
 
-        stage('Medir Cobertura') {
+        stage('Medir cobertura') {
             steps {
-                echo 'Generando reporte de cobertura de código...'
-                sh 'pytest --cov=app --cov-report=term-missing --cov-report=xml'
+                bat 'python -m pytest --cov=app --cov-report=term-missing --cov-report=xml'
             }
         }
     }
 
     post {
-        always {
-            echo 'Finalización del pipeline de Jenkins.'
-        }
         success {
-            echo '¡Pipeline exitoso! Todas las pruebas pasaron satisfactoriamente.'
+            echo 'Pipeline ejecutado correctamente.'
         }
         failure {
-            echo '¡Pipeline fallido! Se detectaron errores en las pruebas automatizadas.'
+            echo 'Se detectaron errores durante las pruebas.'
         }
     }
 }
