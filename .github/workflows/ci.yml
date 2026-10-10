@@ -15,6 +15,8 @@ jobs:
       # 1. Obtener el código del repositorio
       - name: Descargar repositorio (Checkout)
         uses: actions/checkout@v4
+                with:
+          fetch-depth: 0
 
       # 2. Configurar el entorno de Python
       - name: Configurar Python
@@ -39,10 +41,9 @@ jobs:
         run: |
           pytest --cov=app --cov-report=term-missing --cov-report=xml
 
-      # 6. Paso opcional para SonarCloud / SonarQube (solo se ejecuta si existe el secreto configurado)
-      - name: Escaneo de calidad con SonarCloud (Opcional)
-        if: env.SONAR_TOKEN != ''
+      # 6. Analizar calidad del codigo con SonarQube Cloud
+      - name: Analizar codigo con SonarQube Cloud
+        if: ${{ github.event_name == 'push' }}
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        uses: SonarSource/sonarcloud-github-action@master
