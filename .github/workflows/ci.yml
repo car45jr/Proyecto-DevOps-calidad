@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Obtener el código del repositorio
+           # 1. Obtener el codigo del repositorio
       - name: Descargar repositorio (Checkout)
         uses: actions/checkout@v4
-                with:
+        with:
           fetch-depth: 0
 
       # 2. Configurar el entorno de Python
